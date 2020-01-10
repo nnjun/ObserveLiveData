@@ -1,0 +1,2 @@
+include ':app', ':livedata_core', ':livedata_annotations', ':livedata_api'
+rootProject.name='ObserveLiveData'

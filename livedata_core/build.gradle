@@ -1,0 +1,18 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc2'
+    compileOnly 'com.google.auto.service:auto-service:1.0-rc2'
+    implementation 'com.squareup:javapoet:1.8.0'
+    implementation project(':livedata_annotations')
+    implementation project(':livedata_api')
+    implementation "android.arch.lifecycle:runtime:$rootProject.ext.ViewModelVersion"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
