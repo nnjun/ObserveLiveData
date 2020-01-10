@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/language-java-brightgreen.svg)
 
-通过注解监听LiveData数据变化，原理类似于Butterknife编译时生成。
+通过注解监听LiveData数据变化，编译时注解。
 
 ## 使用方式
 
