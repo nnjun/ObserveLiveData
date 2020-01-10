@@ -79,5 +79,13 @@ android {
 }
 
 ```
-
+## 混淆配置
+```
+# ObserveLiveData
+-keep class top.niunaijun.livedata.** {*; }
+-keep class **$LiveData$** { *; }
+-keepclasseswithmembernames class * {
+    @ObserveLiveData.* <methods>;
+}
+```
 #### 如果项目帮助到你，请多多star 感谢！
