@@ -1,18 +1,13 @@
 package top.niunaijun.livedata.core;
 
-import android.arch.lifecycle.LifecycleOwner;
-
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
@@ -33,22 +28,29 @@ import top.niunaijun.livedata.core.utils.ClassUtils;
  */
 public class ObserveLiveDataProxy {
 
-    private ClassName observer = ClassName.get("android.arch.lifecycle", "Observer");
+    private ClassName observer;
+    private ClassName LifecycleOwner;
     private ClassName REGISTER = ClassName.get("top.niunaijun.livedata.api", "ObserveRegister");
-    private ParameterizedTypeName LIST = ParameterizedTypeName.get(ClassName.get("java.util", "List"),
-            ClassName.get(String.class));
 
     private static ClassName mTarget;
     private TypeElement mHostTypeElement;
     private Elements mElementUtils;
     private String mTargetClass;
     private String mRandClassName;
+    private String mLifecyclePackage;
     private Set<ObserveInfo> mObserves = new HashSet<>();
 
-    public ObserveLiveDataProxy(TypeElement targetTypeElement, Elements elementUtils, Set<ObserveInfo> observes) {
+    public ObserveLiveDataProxy(TypeElement targetTypeElement, Elements elementUtils, Set<ObserveInfo> observes, String lifecyclePackage) {
         mHostTypeElement = targetTypeElement;
         mElementUtils = elementUtils;
         mObserves = observes;
+        mLifecyclePackage = lifecyclePackage;
+
+        if (lifecyclePackage == null || lifecyclePackage.length() == 0) {
+            lifecyclePackage = "android.arch.lifecycle";
+        }
+        observer = ClassName.get(lifecyclePackage, "Observer");
+        LifecycleOwner = ClassName.get(lifecyclePackage, "LifecycleOwner");
     }
 
     JavaFile generateJavaCode() {
@@ -108,9 +110,9 @@ public class ObserveLiveDataProxy {
                 Object.class,
                 observeInfo.getMethod().getSimpleName(),
 
-                LifecycleOwner.class,
+                LifecycleOwner,
                 observeInfo.getDataName(),
-                LifecycleOwner.class,
+                LifecycleOwner,
                 observeInfo.getDataName(),
                 observeInfo.getMethod().getSimpleName(),
 
@@ -143,9 +145,9 @@ public class ObserveLiveDataProxy {
                 ClassName.get(variableElement.asType()),
                 observeInfo.getMethod().getSimpleName(),
 
-                LifecycleOwner.class,
+                LifecycleOwner,
                 observeInfo.getDataName(),
-                LifecycleOwner.class,
+                LifecycleOwner,
                 observeInfo.getDataName(),
                 observeInfo.getMethod().getSimpleName(),
 

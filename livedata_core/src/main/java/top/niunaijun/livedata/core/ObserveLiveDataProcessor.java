@@ -1,10 +1,8 @@
 package top.niunaijun.livedata.core;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.ClassName;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedHashSet;
@@ -18,6 +16,7 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
+import javax.annotation.processing.SupportedOptions;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -25,7 +24,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
-import javax.tools.Diagnostic;
 
 import top.niunaijun.livedata.annotations.ObserveLiveData;
 
@@ -37,12 +35,14 @@ import top.niunaijun.livedata.annotations.ObserveLiveData;
  * しーＪ
  * 此处无Bug
  */
+@SupportedOptions({"LIFECYCLE"})
 @AutoService(Processor.class)
 public class ObserveLiveDataProcessor extends AbstractProcessor {
 
     private Map<String, ObserveLiveDataProxy> mObserveLiveDataProxyMap;
 
     private Messager mMessager;
+    private Map<String, String> mOptions;
     private Elements mElementUtils; //元素相关的辅助类
     private Filer mFiler;
 
@@ -53,6 +53,7 @@ public class ObserveLiveDataProcessor extends AbstractProcessor {
         mElementUtils = processingEnv.getElementUtils();
         mFiler = processingEnv.getFiler();
         mObserveLiveDataProxyMap = new Hashtable<>();
+        mOptions = processingEnv.getOptions();
     }
 
     @Override
@@ -70,9 +71,6 @@ public class ObserveLiveDataProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         mObserveLiveDataProxyMap.clear();
-        for (String s : processingEnv.getOptions().keySet()) {
-            mMessager.printMessage(Diagnostic.Kind.WARNING, "key : " + s + ", value : " + processingEnv.getOptions().get(s));
-        }
         for (Element element : roundEnv.getElementsAnnotatedWith(ObserveLiveData.class)) {
             ObserveLiveData annotation = element.getAnnotation(ObserveLiveData.class);
             TypeElement typeElement = (TypeElement) element.getEnclosingElement();
@@ -117,7 +115,7 @@ public class ObserveLiveDataProcessor extends AbstractProcessor {
     public ObserveLiveDataProxy getProxy(TypeElement element, String fullName) {
         ObserveLiveDataProxy observeLiveDataProxy = mObserveLiveDataProxyMap.get(fullName);
         if (observeLiveDataProxy == null) {
-            observeLiveDataProxy = new ObserveLiveDataProxy(element, mElementUtils, new HashSet<>());
+            observeLiveDataProxy = new ObserveLiveDataProxy(element, mElementUtils, new HashSet<>(), mOptions.get("LIFECYCLE"));
             mObserveLiveDataProxyMap.put(fullName, observeLiveDataProxy);
         }
         return observeLiveDataProxy;
