@@ -20,8 +20,8 @@ allprojects {
 ```
 引入依赖
 ```
-implementation 'com.github.nnjun.ObserveLiveData:livedata_api:1.0.1'
-annotationProcessor 'com.github.nnjun.ObserveLiveData:livedata_core:1.0.1'
+implementation 'com.github.nnjun.ObserveLiveData:livedata_api:1.0.2'
+annotationProcessor 'com.github.nnjun.ObserveLiveData:livedata_core:1.0.2'
 ```
 
 
