@@ -37,14 +37,12 @@ public class ObserveLiveDataProxy {
     private Elements mElementUtils;
     private String mTargetClass;
     private String mRandClassName;
-    private String mLifecyclePackage;
     private Set<ObserveInfo> mObserves = new HashSet<>();
 
     public ObserveLiveDataProxy(TypeElement targetTypeElement, Elements elementUtils, Set<ObserveInfo> observes, String lifecyclePackage) {
         mHostTypeElement = targetTypeElement;
         mElementUtils = elementUtils;
         mObserves = observes;
-        mLifecyclePackage = lifecyclePackage;
 
         if (lifecyclePackage == null || lifecyclePackage.length() == 0) {
             lifecyclePackage = "android.arch.lifecycle";

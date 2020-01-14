@@ -77,8 +77,7 @@ public class ObserveManager {
             return mapping;
         }
         mapping = new ArrayList<>();
-        // @ObserveLiveData in the public method
-        Method[] methods = clazz.getMethods();
+        Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(ObserveLiveData.class)) {
                 ObserveLiveData annotation = method.getAnnotation(ObserveLiveData.class);
